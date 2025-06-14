@@ -1,20 +1,19 @@
 import openai
 import streamlit as st
-from prompts import session_prompt
 
-openai.api_key =  st.secrets["OPENAI_API_KEY"]
-    prompt = session_prompt.format(level=level, duration=duration, ambiance=ambiance)
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.7,
-        max_tokens=800
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+
+def generate_session(niveau, duree, ambiance):
+    prompt = (
+        f"Crée une session de piano pour un niveau {niveau}, "
+        f"d'une durée de {duree} minutes, avec une ambiance {ambiance}. "
+        "Propose des exercices ou idées adaptés à l’objectif de devenir compositeur de musique de film."
     )
-    content = response["choices"][0]["message"]["content"]
+    
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=prompt,
+        max_tokens=300
+    )
 
-    parts = content.split("###")
-    return {
-        "plan": parts[1].strip() if len(parts) > 1 else content,
-        "exercices": parts[2].strip() if len(parts) > 2 else "",
-        "suggestion_passive": parts[3].strip() if len(parts) > 3 else "",
-    }
+    return response.choices[0].text.strip()
