@@ -2,7 +2,7 @@ import openai
 import streamlit as st
 from prompts import session_prompt
 
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+openai.api_key = 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
 
 def generate_session(level, duration, ambiance):
     prompt = session_prompt.format(level=level, duration=duration, ambiance=ambiance)
